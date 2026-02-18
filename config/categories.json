@@ -1,0 +1,19 @@
+{
+  "categories": [
+    {
+      "id": "videos",
+      "name": "Videos",
+      "icon": "video-camera",
+      "playlists": [
+        {
+          "id": "PLxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx1",
+          "name": "Own Videos"
+        },
+        {
+          "id": "PLxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx2",
+          "name": "Favourite Videos"
+        }
+      ]
+    }
+  ]
+}
