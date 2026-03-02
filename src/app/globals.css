@@ -440,24 +440,24 @@ html {
 /* Mobile responsive */
 @media (max-width: 767px) {
   .timeline-container {
-    padding: 0 10px 0 30px;
+    padding: 0 10px;
   }
 
   .timeline-axis-line {
-    left: 15px;
+    left: 20px;
     transform: none;
   }
 
   .timeline-video-item.left,
   .timeline-video-item.right {
     justify-content: flex-start;
-    padding-left: 24px;
+    padding-left: 36px;
     padding-right: 0;
   }
 
   .timeline-node {
-    left: 15px;
-    transform: none;
+    left: 10px;
+    transform: translateX(-50%);
   }
 
   .timeline-video-card {
@@ -472,18 +472,24 @@ html {
 
   .timeline-year-marker {
     justify-content: flex-start;
-    padding-left: 24px;
+    padding-left: 36px;
   }
 
   .timeline-break {
     justify-content: flex-start;
-    padding-left: 8px;
+    min-height: 40px;
+  }
+
+  .timeline-break-dots {
+    position: absolute;
+    left: 10px;
+    transform: translateX(-50%);
   }
 
   .timeline-break::before {
-    left: 15px;
+    left: 10px;
     top: -5px;
     bottom: -5px;
-    transform: none;
+    transform: translateX(-50%);
   }
 }

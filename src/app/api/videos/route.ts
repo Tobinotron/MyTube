@@ -42,7 +42,8 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const videos = await fetchAllCategoriesVideos(config.categories, apiKey, forceRefresh);
+    const orsApiKey = process.env.OPENROUTESERVICE_API_KEY;
+    const videos = await fetchAllCategoriesVideos(config.categories, apiKey, forceRefresh, orsApiKey);
 
     return NextResponse.json({
       videos,

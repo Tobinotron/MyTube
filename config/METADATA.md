@@ -98,6 +98,67 @@ Where the video was filmed.
 Location: Berlin, Germany
 ```
 
+### Coordinates
+
+GPS coordinates for placing the video on the map.
+
+```
+Coordinates: 52.52, 13.405
+```
+
+### Route
+
+A route/path displayed as a polyline on the map when the video's marker is clicked. The format is auto-detected:
+
+**Raw Coordinates:**
+
+Semicolon-separated `lat,lng` pairs:
+
+```
+Route: 52.520,13.405;52.523,13.410;52.530,13.415
+```
+
+**Encoded Polyline:**
+
+Uses [Google's Encoded Polyline Algorithm](https://developers.google.com/maps/documentation/utilities/polylinealgorithm):
+
+```
+Route: _p~iF~ps|U_ulLnnqC_mqNvxq`@
+```
+
+**Notes:**
+- A route requires at least 2 points
+- If `Route` is set but `Coordinates` is not, the marker is automatically placed at the first point of the route
+- If both `Route` and `RouteWaypoints` are set, `Route` takes priority
+
+### RouteWaypoints (auto-routing via OpenRouteService)
+
+Instead of providing a full route, you can provide just the waypoints and let [OpenRouteService](https://openrouteservice.org/) compute the actual road/trail route automatically.
+
+Requires `OPENROUTESERVICE_API_KEY` in `.env.local` (free at [openrouteservice.org](https://openrouteservice.org/dev/#/signup)).
+
+```
+RouteWaypoints: 52.52,13.405;48.85,2.35;51.50,-0.12
+```
+
+Semicolon-separated `lat,lng` pairs representing the stops. At least 2 waypoints are required.
+
+### RouteProfile
+
+Travel profile for OpenRouteService routing. Used with `RouteWaypoints`.
+
+```
+RouteProfile: foot-hiking
+```
+
+**Available profiles:** `driving-car`, `cycling-regular`, `cycling-mountain`, `cycling-road`, `cycling-electric`, `foot-walking`, `foot-hiking`
+
+Defaults to `foot-hiking` if not specified.
+
+**Notes:**
+- Routes are computed server-side and cached with video data
+- If `RouteWaypoints` is set but `Coordinates` is not, the marker is placed at the first waypoint
+
 ### Custom Fields
 
 Any other `Key: Value` pairs are stored and available for future features.
@@ -125,6 +186,9 @@ Members: Alice, Bob, Charlie
 Series: Weekly Highlights
 Episode: 42
 Location: Berlin
+Coordinates: 52.52, 13.405
+RouteWaypoints: 52.52,13.405;52.53,13.41;52.54,13.42
+RouteProfile: foot-hiking
 ```
 
 ## Notes

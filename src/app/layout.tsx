@@ -3,9 +3,10 @@ import './globals.css';
 import { SiteConfigProvider } from '@/contexts/SiteConfigContext';
 import { SettingsProvider } from '@/contexts/SettingsContext';
 import { NavigationProvider } from '@/contexts/NavigationContext';
+import siteConfig from '@/../config/site.json';
 
 export const metadata: Metadata = {
-  title: 'MyTube',
+  title: siteConfig.name,
   description: 'Your private YouTube playlist viewer',
 };
 

@@ -5,6 +5,7 @@ import {
 } from '@/types/video';
 import { Category } from '@/types/category';
 import { parseVideoMetadata, getEffectiveDate } from './metadataParser';
+import { fetchOrsRoute } from './openRouteService';
 
 const YOUTUBE_API_BASE = 'https://www.googleapis.com/youtube/v3';
 
@@ -189,7 +190,8 @@ export async function fetchPlaylistVideos(
 export async function fetchAllCategoriesVideos(
   categories: Category[],
   apiKey: string,
-  forceRefresh: boolean = false
+  forceRefresh: boolean = false,
+  orsApiKey?: string
 ): Promise<Video[]> {
   const allVideos: Video[] = [];
 
@@ -212,6 +214,28 @@ export async function fetchAllCategoriesVideos(
         );
       }
     }
+  }
+
+  // Resolve ORS routes for videos with waypoints
+  if (orsApiKey) {
+    const videosNeedingRoutes = allVideos.filter(
+      v => v.metadata?.routeWaypoints && !v.metadata?.route
+    );
+
+    await Promise.all(
+      videosNeedingRoutes.map(async (video) => {
+        const waypoints = video.metadata!.routeWaypoints!;
+        const profile = video.metadata!.routeProfile || 'foot-hiking';
+        const route = await fetchOrsRoute(waypoints, profile, orsApiKey);
+        if (route) {
+          video.metadata!.route = route;
+          // Auto-derive coordinates if not set
+          if (!video.metadata!.coordinates) {
+            video.metadata!.coordinates = { lat: route[0].lat, lng: route[0].lng };
+          }
+        }
+      })
+    );
   }
 
   // Sort by display date (newest first) - uses metadata date if available

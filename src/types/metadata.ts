@@ -32,6 +32,15 @@ export interface VideoMetadata {
   /** GPS coordinates for map placement */
   coordinates?: Coordinates;
 
+  /** Route for drawing polylines on map (manual or computed from ORS) */
+  route?: Coordinates[];
+
+  /** Waypoints for auto-generating a route via OpenRouteService */
+  routeWaypoints?: Coordinates[];
+
+  /** ORS travel profile (e.g., driving-car, foot-hiking, cycling-regular) */
+  routeProfile?: string;
+
   /** Custom tags for categorization/search */
   tags?: string[];
 

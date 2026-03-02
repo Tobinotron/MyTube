@@ -1,4 +1,5 @@
 import { VideoMetadata, MetadataParseResult, Coordinates } from '@/types/metadata';
+import { parseRoute, parseRawRoute } from './polylineDecoder';
 
 // Regex pattern that matches the metadata marker
 // Supports: === Metadata ===, --- Metadata ---, or mixed (at least 3 of =, -, or #)
@@ -170,6 +171,32 @@ export function parseVideoMetadata(description: string): MetadataParseResult {
         }
         break;
 
+      case 'route':
+        const route = parseRoute(value);
+        if (route) {
+          metadata.route = route;
+        } else {
+          warnings.push(
+            `Invalid route: "${value.substring(0, 50)}${value.length > 50 ? '...' : ''}". Expected encoded polyline or "lat,lng;lat,lng;..." format`
+          );
+        }
+        break;
+
+      case 'routewaypoints':
+        const waypoints = parseRawRoute(value);
+        if (waypoints) {
+          metadata.routeWaypoints = waypoints;
+        } else {
+          warnings.push(
+            `Invalid route waypoints: "${value}". Expected "lat,lng;lat,lng;..." format with at least 2 points`
+          );
+        }
+        break;
+
+      case 'routeprofile':
+        metadata.routeProfile = value;
+        break;
+
       default:
         // Store unknown fields in custom
         customFields[key] = value;
@@ -179,6 +206,14 @@ export function parseVideoMetadata(description: string): MetadataParseResult {
 
   if (Object.keys(customFields).length > 0) {
     metadata.custom = customFields;
+  }
+
+  // Auto-derive coordinates from the first route/waypoint if not explicitly set
+  if (!metadata.coordinates) {
+    const firstPoint = metadata.route?.[0] || metadata.routeWaypoints?.[0];
+    if (firstPoint) {
+      metadata.coordinates = { lat: firstPoint.lat, lng: firstPoint.lng };
+    }
   }
 
   return {
