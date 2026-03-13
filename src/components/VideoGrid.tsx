@@ -4,11 +4,7 @@ import { useMemo } from 'react';
 import { Video } from '@/types/video';
 import { useTranslation } from '@/i18n/useTranslation';
 import VideoCard from './VideoCard';
-import {
-  VideoCameraIcon,
-  GameControllerIcon,
-  FilmIcon,
-} from '@/components/Icons';
+import { Video as VideoIcon, Gamepad2, Film } from 'lucide-react';
 
 interface VideoGridProps {
   videos: Video[];
@@ -21,9 +17,9 @@ const CATEGORY_CONFIG: Record<string, {
   labelKey: 'nav.vlogs' | 'nav.gaming' | 'nav.films';
   order: number;
 }> = {
-  vlogs: { icon: VideoCameraIcon, labelKey: 'nav.vlogs', order: 1 },
-  gaming: { icon: GameControllerIcon, labelKey: 'nav.gaming', order: 2 },
-  films: { icon: FilmIcon, labelKey: 'nav.films', order: 3 },
+  vlogs: { icon: VideoIcon, labelKey: 'nav.vlogs', order: 1 },
+  gaming: { icon: Gamepad2, labelKey: 'nav.gaming', order: 2 },
+  films: { icon: Film, labelKey: 'nav.films', order: 3 },
 };
 
 export default function VideoGrid({ videos, onVideoClick, groupByCategory = false }: VideoGridProps) {

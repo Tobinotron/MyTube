@@ -3,7 +3,7 @@ export interface Playlist {
   name: string;
 }
 
-export type IconName = 'video-camera' | 'game-controller' | 'film' | 'music' | 'book' | 'star' | 'heart' | 'folder' | 'smartphone' | 'zap';
+export type IconName = 'video-camera' | 'game-controller' | 'film' | 'music' | 'book' | 'star' | 'heart' | 'folder' | 'smartphone' | 'zap' | 'plane' | 'cooking-pot' | 'brush' | 'puzzle' | 'flower' | 'mountain' | 'camera' | 'image';
 
 export interface Category {
   id: string;

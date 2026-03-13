@@ -2,7 +2,7 @@
 
 import { Video } from '@/types/video';
 import { useTranslation } from '@/i18n/useTranslation';
-import { ListIcon } from '@/components/Icons';
+import { List } from 'lucide-react';
 
 interface SeriesCardProps {
   seriesName: string;
@@ -38,7 +38,7 @@ export default function SeriesCard({ seriesName, videos, onClick }: SeriesCardPr
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <ListIcon className="w-16 h-16 text-gray-400" />
+            <List className="w-16 h-16 text-gray-400" />
           </div>
         )}
 
@@ -48,7 +48,7 @@ export default function SeriesCard({ seriesName, videos, onClick }: SeriesCardPr
         {/* Right side overlay with video count */}
         <div className="absolute top-0 right-0 bottom-0 w-2/5 bg-black/80 flex flex-col items-center justify-center gap-1">
           <span className="text-white text-2xl font-bold">{videoCount}</span>
-          <ListIcon className="w-6 h-6 text-white" />
+          <List className="w-6 h-6 text-white" />
         </div>
 
         {/* Play all overlay on hover */}

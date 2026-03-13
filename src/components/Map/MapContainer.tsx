@@ -6,6 +6,7 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import L from 'leaflet';
 import { Video } from '@/types/video';
 import { useSettings } from '@/contexts/SettingsContext';
+import { Eye, EyeOff, Map, LayoutGrid, Mountain } from 'lucide-react';
 
 // Import Leaflet and MarkerCluster CSS
 import 'leaflet/dist/leaflet.css';
@@ -247,25 +248,18 @@ export default function MapContainer({ videos, onVideoClick }: MapContainerProps
               onClick={() => setMarkersHidden(h => !h)}
               title={markersHidden ? 'Show markers' : 'Hide markers'}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                {markersHidden ? (
-                  <path fillRule="evenodd" d="M3.28 2.22a.75.75 0 00-1.06 1.06l14.5 14.5a.75.75 0 101.06-1.06l-1.745-1.745a10.029 10.029 0 003.3-4.38 1.651 1.651 0 000-1.185A10.004 10.004 0 009.999 3a9.956 9.956 0 00-4.744 1.194L3.28 2.22zM7.752 6.69l1.092 1.092a2.5 2.5 0 013.374 3.373l1.092 1.092a4 4 0 00-5.558-5.558z" clipRule="evenodd" />
-                ) : (
-                  <>
-                    <path d="M10 12.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5z" />
-                    <path fillRule="evenodd" d="M.664 10.59a1.651 1.651 0 010-1.186A10.004 10.004 0 0110 3c4.257 0 7.893 2.66 9.336 6.41.147.381.146.804 0 1.186A10.004 10.004 0 0110 17c-4.257 0-7.893-2.66-9.336-6.41zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-                  </>
-                )}
-              </svg>
+              {markersHidden ? (
+                <EyeOff className="w-4 h-4" />
+              ) : (
+                <Eye className="w-4 h-4" />
+              )}
             </MapControlButton>
             <MapControlButton
               active={showAllRoutes}
               onClick={() => setShowAllRoutes(s => !s)}
               title={showAllRoutes ? 'Hide all routes' : 'Show all routes'}
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-                <path fillRule="evenodd" d="M8.157 2.176a1.5 1.5 0 0 0-1.147 0l-4.084 1.69A1.5 1.5 0 0 0 2 5.25v10.877a1.5 1.5 0 0 0 2.074 1.386l3.51-1.452 4.26 1.762a1.5 1.5 0 0 0 1.146 0l4.083-1.69A1.5 1.5 0 0 0 18 14.75V3.872a1.5 1.5 0 0 0-2.073-1.386l-3.51 1.452-4.26-1.762ZM7.58 5a.75.75 0 0 1 .75.75v6.5a.75.75 0 0 1-1.5 0v-6.5A.75.75 0 0 1 7.58 5Zm5.59 2.75a.75.75 0 0 0-1.5 0v6.5a.75.75 0 0 0 1.5 0v-6.5Z" clipRule="evenodd" />
-              </svg>
+              <Map className="w-4 h-4" />
             </MapControlButton>
           </>
         )}
@@ -274,15 +268,11 @@ export default function MapContainer({ videos, onVideoClick }: MapContainerProps
           onClick={toggleMapStyle}
           title={mapStyle === 'styled' ? 'Switch to satellite' : 'Switch to styled'}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-            {mapStyle === 'satellite' ? (
-              // Mountain (satellite active)
-              <path fillRule="evenodd" d="M1 18L7 4l4 6 3-3 5 11H1Z" clipRule="evenodd" />
-            ) : (
-              // Grid/squares icon (styled active) — Heroicons squares-2x2
-              <path fillRule="evenodd" d="M4.25 2A2.25 2.25 0 0 0 2 4.25v2.5A2.25 2.25 0 0 0 4.25 9h2.5A2.25 2.25 0 0 0 9 6.75v-2.5A2.25 2.25 0 0 0 6.75 2h-2.5Zm0 9A2.25 2.25 0 0 0 2 13.25v2.5A2.25 2.25 0 0 0 4.25 18h2.5A2.25 2.25 0 0 0 9 15.75v-2.5A2.25 2.25 0 0 0 6.75 11h-2.5Zm9-9A2.25 2.25 0 0 0 11 4.25v2.5A2.25 2.25 0 0 0 13.25 9h2.5A2.25 2.25 0 0 0 18 6.75v-2.5A2.25 2.25 0 0 0 15.75 2h-2.5Zm0 9A2.25 2.25 0 0 0 11 13.25v2.5A2.25 2.25 0 0 0 13.25 18h2.5A2.25 2.25 0 0 0 18 15.75v-2.5A2.25 2.25 0 0 0 15.75 11h-2.5Z" clipRule="evenodd" />
-            )}
-          </svg>
+          {mapStyle === 'satellite' ? (
+            <Mountain className="w-4 h-4" />
+          ) : (
+            <LayoutGrid className="w-4 h-4" />
+          )}
         </MapControlButton>
       </div>
 

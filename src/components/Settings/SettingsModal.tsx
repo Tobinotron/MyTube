@@ -3,7 +3,7 @@
 import { useEffect, useCallback, useState } from 'react';
 import { useNavigation } from '@/contexts/NavigationContext';
 import { useTranslation } from '@/i18n/useTranslation';
-import { XIcon } from '@/components/Icons';
+import { X } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import LanguageSelector from './LanguageSelector';
 
@@ -68,7 +68,7 @@ export default function SettingsModal() {
               hover:bg-gray-100 dark:hover:bg-yt-hover transition-colors"
             aria-label={t('settings.close')}
           >
-            <XIcon className="w-5 h-5" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 

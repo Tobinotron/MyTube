@@ -3,7 +3,7 @@
 import { useNavigation } from '@/contexts/NavigationContext';
 import { useSiteConfig } from '@/contexts/SiteConfigContext';
 import { useTranslation } from '@/i18n/useTranslation';
-import { MenuIcon, ChevronLeftIcon, ChevronRightIcon } from '@/components/Icons';
+import { Menu, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface HeaderProps {
   searchQuery: string;
@@ -27,7 +27,7 @@ export default function Header({ searchQuery, onSearchChange }: HeaderProps) {
               hover:bg-gray-100 dark:hover:bg-yt-hover transition-colors"
             aria-label={t('mobile.menu')}
           >
-            <MenuIcon className="w-6 h-6" />
+            <Menu className="w-6 h-6" />
           </button>
 
           {/* Desktop sidebar toggle */}
@@ -38,9 +38,9 @@ export default function Header({ searchQuery, onSearchChange }: HeaderProps) {
             aria-label={isSidebarExpanded ? t('nav.collapse') : t('nav.expand')}
           >
             {isSidebarExpanded ? (
-              <ChevronLeftIcon className="w-6 h-6" />
+              <ChevronLeft className="w-6 h-6" />
             ) : (
-              <ChevronRightIcon className="w-6 h-6" />
+              <ChevronRight className="w-6 h-6" />
             )}
           </button>
 

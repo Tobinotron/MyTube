@@ -33,6 +33,8 @@ interface NavigationContextValue {
   // Dynamic categories from config
   categories: SidebarCategory[];
   setCategories: (categories: SidebarCategory[]) => void;
+  categoriesLoading: boolean;
+  setCategoriesLoading: (loading: boolean) => void;
 
   // Series from video metadata
   availableSeries: string[];
@@ -87,6 +89,7 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
 
   // Dynamic categories from config
   const [categories, setCategories] = useState<SidebarCategory[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
 
   // Series from video metadata
   const [availableSeries, setAvailableSeries] = useState<string[]>([]);
@@ -203,6 +206,8 @@ export function NavigationProvider({ children }: { children: ReactNode }) {
         setActiveCategory: setActiveCategoryWithClear,
         categories,
         setCategories,
+        categoriesLoading,
+        setCategoriesLoading,
         availableSeries,
         setAvailableSeries,
         activeSeries,

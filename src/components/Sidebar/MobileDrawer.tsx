@@ -4,15 +4,9 @@ import { useEffect } from 'react';
 import { useNavigation } from '@/contexts/NavigationContext';
 import { useSiteConfig } from '@/contexts/SiteConfigContext';
 import { useTranslation } from '@/i18n/useTranslation';
-import {
-  SettingsIcon,
-  XIcon,
-  HomeIcon,
-  DynamicIcon,
-  ListIcon,
-  MapPinIcon,
-  ClockIcon,
-} from '@/components/Icons';
+import { Settings, X, Home, List, MapPin, Clock } from 'lucide-react';
+import { DynamicIcon } from '@/components/Icons/DynamicIcon';
+import { MobileDrawerCategorySkeleton } from '@/components/Skeletons';
 
 export default function MobileDrawer() {
   const {
@@ -21,6 +15,7 @@ export default function MobileDrawer() {
     activeCategory,
     setActiveCategory,
     categories,
+    categoriesLoading,
     showSeriesOverview,
     openSeriesOverview,
     activeSeries,
@@ -104,7 +99,7 @@ export default function MobileDrawer() {
               hover:bg-gray-100 dark:hover:bg-yt-hover"
             aria-label={t('mobile.close')}
           >
-            <XIcon className="w-5 h-5" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
@@ -123,29 +118,33 @@ export default function MobileDrawer() {
               }
             `}
           >
-            <HomeIcon className="w-6 h-6" />
+            <Home className="w-6 h-6" />
             <span>{t('videos.all')}</span>
           </button>
 
           {/* Category items */}
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => handleCategoryClick(category.id)}
-              className={`
-                w-full flex items-center gap-3 px-3 py-3 rounded-lg
-                transition-colors duration-150
-                ${
-                  activeCategory === category.id
-                    ? 'bg-gray-200 dark:bg-yt-hover text-primary'
-                    : 'text-gray-700 dark:text-yt-text-secondary hover:bg-gray-100 dark:hover:bg-yt-hover'
-                }
-              `}
-            >
-              <DynamicIcon name={category.icon} className="w-6 h-6" />
-              <span>{category.name}</span>
-            </button>
-          ))}
+          {categoriesLoading ? (
+            <MobileDrawerCategorySkeleton />
+          ) : (
+            categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => handleCategoryClick(category.id)}
+                className={`
+                  w-full flex items-center gap-3 px-3 py-3 rounded-lg
+                  transition-colors duration-150
+                  ${
+                    activeCategory === category.id
+                      ? 'bg-gray-200 dark:bg-yt-hover text-primary'
+                      : 'text-gray-700 dark:text-yt-text-secondary hover:bg-gray-100 dark:hover:bg-yt-hover'
+                  }
+                `}
+              >
+                <DynamicIcon name={category.icon} className="w-6 h-6" />
+                <span>{category.name}</span>
+              </button>
+            ))
+          )}
 
           {/* Divider - only show if at least one special page is enabled */}
           {(config.enableSeries || config.enableMap || config.enableTimeline) && (
@@ -166,7 +165,7 @@ export default function MobileDrawer() {
                 }
               `}
             >
-              <ListIcon className="w-6 h-6" />
+              <List className="w-6 h-6" />
               <span>{t('nav.series')}</span>
             </button>
           )}
@@ -185,7 +184,7 @@ export default function MobileDrawer() {
                 }
               `}
             >
-              <MapPinIcon className="w-6 h-6" />
+              <MapPin className="w-6 h-6" />
               <span>{t('nav.map')}</span>
             </button>
           )}
@@ -204,7 +203,7 @@ export default function MobileDrawer() {
                 }
               `}
             >
-              <ClockIcon className="w-6 h-6" />
+              <Clock className="w-6 h-6" />
               <span>{t('nav.timeline')}</span>
             </button>
           )}
@@ -219,7 +218,7 @@ export default function MobileDrawer() {
               hover:bg-gray-100 dark:hover:bg-yt-hover
               transition-colors duration-150"
           >
-            <SettingsIcon className="w-6 h-6" />
+            <Settings className="w-6 h-6" />
             <span>{t('nav.settings')}</span>
           </button>
         </div>

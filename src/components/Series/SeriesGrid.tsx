@@ -5,7 +5,7 @@ import { Video } from '@/types/video';
 import { useTranslation } from '@/i18n/useTranslation';
 import { useNavigation } from '@/contexts/NavigationContext';
 import SeriesCard from './SeriesCard';
-import { ListIcon } from '@/components/Icons';
+import { List } from 'lucide-react';
 
 interface SeriesGridProps {
   videos: Video[];
@@ -46,7 +46,7 @@ export default function SeriesGrid({ videos }: SeriesGridProps) {
   if (seriesList.length === 0) {
     return (
       <div className="text-center py-12">
-        <ListIcon className="w-16 h-16 mx-auto text-gray-300 dark:text-yt-text-secondary mb-4" />
+        <List className="w-16 h-16 mx-auto text-gray-300 dark:text-yt-text-secondary mb-4" />
         <p className="text-gray-500 dark:text-yt-text-secondary">{t('series.empty')}</p>
         <p className="text-gray-400 dark:text-yt-text-secondary text-sm mt-2">
           {t('series.empty_hint')}
@@ -59,7 +59,7 @@ export default function SeriesGrid({ videos }: SeriesGridProps) {
     <div>
       {/* Header */}
       <div className="flex items-center gap-3 mb-6 pb-2 border-b border-gray-200 dark:border-yt-border">
-        <ListIcon className="w-6 h-6 text-primary" />
+        <List className="w-6 h-6 text-primary" />
         <h2 className="text-xl font-bold text-gray-900 dark:text-yt-text">
           {t('series.title')}
         </h2>

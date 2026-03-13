@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import { Video } from '@/types/video';
 import { useTranslation } from '@/i18n/useTranslation';
-import { ClockIcon } from '@/components/Icons';
+import { Clock } from 'lucide-react';
 
 // Dynamically import the timeline container for code splitting
 const TimelineContainer = dynamic(() => import('./TimelineContainer'), {
@@ -30,7 +30,7 @@ export default function TimelineView({
     <div>
       {/* Header */}
       <div className="flex items-center gap-3 mb-6 pb-2 border-b border-gray-200 dark:border-yt-border">
-        <ClockIcon className="w-6 h-6 text-primary" />
+        <Clock className="w-6 h-6 text-primary" />
         <h2 className="text-xl font-bold text-gray-900 dark:text-yt-text">
           {t('timeline.title')}
         </h2>

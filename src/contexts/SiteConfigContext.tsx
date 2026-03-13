@@ -18,11 +18,13 @@ const SiteConfigContext = createContext<SiteConfigContextValue | undefined>(
   undefined
 );
 
-export function SiteConfigProvider({ children }: { children: ReactNode }) {
-  const [config, setConfig] = useState<SiteConfig>(defaultSiteConfig);
-  const [isLoaded, setIsLoaded] = useState(false);
+export function SiteConfigProvider({ children, initialConfig }: { children: ReactNode; initialConfig?: SiteConfig }) {
+  const [config, setConfig] = useState<SiteConfig>(initialConfig ?? defaultSiteConfig);
+  const [isLoaded, setIsLoaded] = useState(!!initialConfig);
 
   useEffect(() => {
+    if (initialConfig) return;
+
     async function loadConfig() {
       try {
         const response = await fetch('/api/site-config');
@@ -37,7 +39,7 @@ export function SiteConfigProvider({ children }: { children: ReactNode }) {
       }
     }
     loadConfig();
-  }, []);
+  }, [initialConfig]);
 
   // Apply CSS custom property for primary color
   useEffect(() => {

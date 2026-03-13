@@ -14,8 +14,9 @@ import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar/Sidebar';
 import MobileDrawer from '@/components/Sidebar/MobileDrawer';
 import SettingsModal from '@/components/Settings/SettingsModal';
-import { ChevronLeftIcon, ListIcon } from '@/components/Icons';
+import { ChevronLeft, List } from 'lucide-react';
 import { searchVideos } from '@/lib/searchUtils';
+import { VideoGridSkeleton } from '@/components/Skeletons';
 
 export default function Home() {
   const [videos, setVideos] = useState<Video[]>([]);
@@ -24,7 +25,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const { activeCategory, activeSeries, showSeriesOverview, openSeriesOverview, showMapPage, showTimelinePage, isSidebarExpanded, setCategories, setAvailableSeries, refreshTrigger } = useNavigation();
+  const { activeCategory, activeSeries, showSeriesOverview, openSeriesOverview, showMapPage, showTimelinePage, isSidebarExpanded, setCategories, setCategoriesLoading, setAvailableSeries, refreshTrigger } = useNavigation();
   const { config } = useSiteConfig();
   const { t } = useTranslation();
 
@@ -59,11 +60,12 @@ export default function Home() {
         setError(err instanceof Error ? err.message : 'An error occurred');
       } finally {
         setLoading(false);
+        setCategoriesLoading(false);
       }
     }
 
     fetchVideos();
-  }, [refreshTrigger, setCategories, setAvailableSeries]);
+  }, [refreshTrigger, setCategories, setCategoriesLoading, setAvailableSeries]);
 
   // Search-filtered videos (used for Series, Map, Timeline pages)
   const searchFilteredVideos = useMemo(() => {
@@ -118,9 +120,7 @@ export default function Home() {
       >
         <div className="p-4 md:p-6">
           {loading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-            </div>
+            <VideoGridSkeleton />
           ) : error ? (
             <div className="text-center py-8">
               <p className="text-red-500 mb-4">{t('videos.error')}: {error}</p>
@@ -143,11 +143,11 @@ export default function Home() {
                     onClick={openSeriesOverview}
                     className="flex items-center gap-2 text-gray-600 dark:text-yt-text-secondary hover:text-primary transition-colors"
                   >
-                    <ChevronLeftIcon className="w-5 h-5" />
+                    <ChevronLeft className="w-5 h-5" />
                     <span>{t('series.back')}</span>
                   </button>
                   <div className="flex items-center gap-3 mt-3 pb-2 border-b border-gray-200 dark:border-yt-border">
-                    <ListIcon className="w-6 h-6 text-primary" />
+                    <List className="w-6 h-6 text-primary" />
                     <h2 className="text-xl font-bold text-gray-900 dark:text-yt-text">
                       {activeSeries}
                     </h2>

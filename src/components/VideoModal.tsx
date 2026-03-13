@@ -3,7 +3,7 @@
 import { useEffect, useCallback } from 'react';
 import { Video } from '@/types/video';
 import { useTranslation } from '@/i18n/useTranslation';
-import { XIcon } from '@/components/Icons';
+import { X } from 'lucide-react';
 
 interface VideoModalProps {
   video: Video;
@@ -50,7 +50,7 @@ export default function VideoModal({ video, onClose }: VideoModalProps) {
           className="absolute -top-12 right-0 text-white hover:text-primary transition-colors"
           aria-label={t('settings.close')}
         >
-          <XIcon className="w-8 h-8" />
+          <X className="w-8 h-8" />
         </button>
 
         {/* Video player */}

@@ -2,7 +2,7 @@
 
 import { useSettings } from '@/contexts/SettingsContext';
 import { useTranslation } from '@/i18n/useTranslation';
-import { SunIcon, MoonIcon } from '@/components/Icons';
+import { Sun, Moon } from 'lucide-react';
 
 export default function ThemeToggle() {
   const { settings, setTheme } = useSettings();
@@ -24,7 +24,7 @@ export default function ThemeToggle() {
           `}
           aria-label={t('settings.theme.light')}
         >
-          <SunIcon className="w-4 h-4" />
+          <Sun className="w-4 h-4" />
           <span className="text-sm">{t('settings.theme.light')}</span>
         </button>
         <button
@@ -39,7 +39,7 @@ export default function ThemeToggle() {
           `}
           aria-label={t('settings.theme.dark')}
         >
-          <MoonIcon className="w-4 h-4" />
+          <Moon className="w-4 h-4" />
           <span className="text-sm">{t('settings.theme.dark')}</span>
         </button>
       </div>

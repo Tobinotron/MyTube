@@ -4,14 +4,9 @@ import { useNavigation } from '@/contexts/NavigationContext';
 import { useSiteConfig } from '@/contexts/SiteConfigContext';
 import { useTranslation } from '@/i18n/useTranslation';
 import SidebarItem from './SidebarItem';
-import {
-  SettingsIcon,
-  HomeIcon,
-  DynamicIcon,
-  ListIcon,
-  MapPinIcon,
-  ClockIcon,
-} from '@/components/Icons';
+import { Settings, Home, List, MapPin, Clock } from 'lucide-react';
+import { DynamicIcon } from '@/components/Icons/DynamicIcon';
+import { SidebarCategorySkeleton } from '@/components/Skeletons';
 
 export default function Sidebar() {
   const {
@@ -19,6 +14,7 @@ export default function Sidebar() {
     activeCategory,
     setActiveCategory,
     categories,
+    categoriesLoading,
     showSeriesOverview,
     openSeriesOverview,
     activeSeries,
@@ -46,7 +42,7 @@ export default function Sidebar() {
       <nav className="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
         {/* Home / All Videos */}
         <SidebarItem
-          icon={<HomeIcon className="w-6 h-6" />}
+          icon={<Home className="w-6 h-6" />}
           label={t('videos.all')}
           isActive={activeCategory === null && !showSeriesOverview && !showMapPage && !showTimelinePage && activeSeries === null}
           isExpanded={isSidebarExpanded}
@@ -54,16 +50,20 @@ export default function Sidebar() {
         />
 
         {/* Category items */}
-        {categories.map((category) => (
-          <SidebarItem
-            key={category.id}
-            icon={<DynamicIcon name={category.icon} className="w-6 h-6" />}
-            label={category.name}
-            isActive={activeCategory === category.id}
-            isExpanded={isSidebarExpanded}
-            onClick={() => setActiveCategory(category.id)}
-          />
-        ))}
+        {categoriesLoading ? (
+          <SidebarCategorySkeleton isExpanded={isSidebarExpanded} />
+        ) : (
+          categories.map((category) => (
+            <SidebarItem
+              key={category.id}
+              icon={<DynamicIcon name={category.icon} className="w-6 h-6" />}
+              label={category.name}
+              isActive={activeCategory === category.id}
+              isExpanded={isSidebarExpanded}
+              onClick={() => setActiveCategory(category.id)}
+            />
+          ))
+        )}
 
         {/* Divider - only show if at least one special page is enabled */}
         {(config.enableSeries || config.enableMap || config.enableTimeline) && (
@@ -73,7 +73,7 @@ export default function Sidebar() {
         {/* Series button */}
         {config.enableSeries && (
           <SidebarItem
-            icon={<ListIcon className="w-6 h-6" />}
+            icon={<List className="w-6 h-6" />}
             label={t('nav.series')}
             isActive={showSeriesOverview || activeSeries !== null}
             isExpanded={isSidebarExpanded}
@@ -84,7 +84,7 @@ export default function Sidebar() {
         {/* Map button */}
         {config.enableMap && (
           <SidebarItem
-            icon={<MapPinIcon className="w-6 h-6" />}
+            icon={<MapPin className="w-6 h-6" />}
             label={t('nav.map')}
             isActive={showMapPage}
             isExpanded={isSidebarExpanded}
@@ -95,7 +95,7 @@ export default function Sidebar() {
         {/* Timeline button */}
         {config.enableTimeline && (
           <SidebarItem
-            icon={<ClockIcon className="w-6 h-6" />}
+            icon={<Clock className="w-6 h-6" />}
             label={t('nav.timeline')}
             isActive={showTimelinePage}
             isExpanded={isSidebarExpanded}
@@ -107,7 +107,7 @@ export default function Sidebar() {
       {/* Settings at bottom */}
       <div className="px-2 py-4 border-t border-gray-200 dark:border-yt-border">
         <SidebarItem
-          icon={<SettingsIcon className="w-6 h-6" />}
+          icon={<Settings className="w-6 h-6" />}
           label={t('nav.settings')}
           isExpanded={isSidebarExpanded}
           onClick={openSettings}
