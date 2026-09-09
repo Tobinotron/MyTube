@@ -7,6 +7,7 @@ import L from 'leaflet';
 import { Video } from '@/types/video';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Eye, EyeOff, Map, LayoutGrid, Mountain } from 'lucide-react';
+import VectorBasemap, { isWebGLAvailable } from './VectorBasemap';
 
 // Import Leaflet and MarkerCluster CSS
 import 'leaflet/dist/leaflet.css';
@@ -177,37 +178,48 @@ function MapControlButton({
 
 type MapStyle = 'styled' | 'satellite';
 
-// CARTO basemaps require a (free) API key since August 2026. Without one, tiles are
-// still served but carry an "API KEY REQUIRED" watermark. Get a key at
+// CARTO basemaps require a (free) API key since August 2026. Without one, raster tiles
+// carry an "API KEY REQUIRED" watermark and vector tiles will follow. Get a key at
 // https://carto.com/basemaps/apikey and set NEXT_PUBLIC_CARTO_API_KEY in .env.local.
 const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY;
 
-const cartoTileUrl = (style: 'light_all' | 'dark_all') => {
-  const base = `https://basemaps.cartocdn.com/rastertiles/${style}/{z}/{x}/{y}{r}.png`;
-  return CARTO_API_KEY ? `${base}?key=${encodeURIComponent(CARTO_API_KEY)}` : base;
-};
-
 if (!CARTO_API_KEY && typeof window !== 'undefined') {
   console.warn(
-    'NEXT_PUBLIC_CARTO_API_KEY is not set. CARTO basemap tiles will show an "API KEY REQUIRED" watermark. ' +
+    'NEXT_PUBLIC_CARTO_API_KEY is not set. CARTO basemap tiles may show an "API KEY REQUIRED" watermark. ' +
     'Get a free key at https://carto.com/basemaps/apikey'
   );
 }
 
 const CARTO_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
-const TILE_CONFIGS: Record<string, { url: string; attribution: string; maxZoom: number }> = {
+// Raster PNG tiles are being retired by CARTO; they remain only as a fallback for
+// browsers without WebGL, where the vector basemap cannot render.
+const cartoRasterUrl = (style: 'light_all' | 'dark_all') => {
+  const base = `https://basemaps.cartocdn.com/rastertiles/${style}/{z}/{x}/{y}{r}.png`;
+  return CARTO_API_KEY ? `${base}?key=${encodeURIComponent(CARTO_API_KEY)}` : base;
+};
+
+type BasemapConfig =
+  | { kind: 'vector'; styleUrl: string; rasterFallbackUrl: string; attribution: string; maxZoom: number }
+  | { kind: 'raster'; url: string; attribution: string; maxZoom: number };
+
+const BASEMAPS: Record<string, BasemapConfig> = {
   'styled-light': {
-    url: cartoTileUrl('light_all'),
+    kind: 'vector',
+    styleUrl: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    rasterFallbackUrl: cartoRasterUrl('light_all'),
     attribution: CARTO_ATTRIBUTION,
     maxZoom: 20,
   },
   'styled-dark': {
-    url: cartoTileUrl('dark_all'),
+    kind: 'vector',
+    styleUrl: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    rasterFallbackUrl: cartoRasterUrl('dark_all'),
     attribution: CARTO_ATTRIBUTION,
     maxZoom: 20,
   },
   satellite: {
+    kind: 'raster',
     url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attribution: '&copy; <a href="https://www.esri.com/">Esri</a> &mdash; Sources: Esri, Maxar, Earthstar Geographics',
     maxZoom: 19,
@@ -221,11 +233,12 @@ export default function MapContainer({ videos, onVideoClick }: MapContainerProps
   const [markersHidden, setMarkersHidden] = useState(false);
   const [showAllRoutes, setShowAllRoutes] = useState(false);
   const [mapStyle, setMapStyle] = useState<MapStyle>('styled');
+  const [webglAvailable] = useState(isWebGLAvailable);
 
   const hasAnyRoutes = useMemo(() => videos.some(v => v.metadata?.route && v.metadata.route.length >= 2), [videos]);
 
-  const tileKey = mapStyle === 'styled' ? `styled-${settings.theme}` : mapStyle;
-  const tileConfig = TILE_CONFIGS[tileKey];
+  const basemapKey = mapStyle === 'styled' ? `styled-${settings.theme}` : mapStyle;
+  const basemap = BASEMAPS[basemapKey];
 
   const toggleMapStyle = () => {
     setMapStyle(s => s === 'styled' ? 'satellite' : 'styled');
@@ -302,13 +315,22 @@ export default function MapContainer({ videos, onVideoClick }: MapContainerProps
         className="h-[calc(100vh-180px)] min-h-[400px] w-full rounded-lg z-0"
         scrollWheelZoom={true}
       >
-        <TileLayer
-          key={tileKey}
-          attribution={tileConfig.attribution}
-          url={tileConfig.url}
-          maxZoom={tileConfig.maxZoom}
-        />
-        <MaxZoomUpdater maxZoom={tileConfig.maxZoom} />
+        {basemap.kind === 'vector' && webglAvailable ? (
+          <VectorBasemap
+            key={basemapKey}
+            styleUrl={basemap.styleUrl}
+            attribution={basemap.attribution}
+            apiKey={CARTO_API_KEY}
+          />
+        ) : (
+          <TileLayer
+            key={basemapKey}
+            attribution={basemap.attribution}
+            url={basemap.kind === 'vector' ? basemap.rasterFallbackUrl : basemap.url}
+            maxZoom={basemap.maxZoom}
+          />
+        )}
+        <MaxZoomUpdater maxZoom={basemap.maxZoom} />
         <FitBounds videos={videos} />
         <MapClickHandler polylinesRef={activePolylinesRef} showAllRoutes={showAllRoutes} />
         <AllRoutesManager

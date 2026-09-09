@@ -41,7 +41,9 @@ Open `.env.local` and paste your YouTube API key. If you don't have one yet:
 - Enable the **YouTube Data API v3**
 - Create an API key under Credentials
 
-The map also needs a free [CARTO Basemaps API key](https://carto.com/basemaps/apikey), otherwise the light/dark map tiles show an "API KEY REQUIRED" watermark. Paste it into `NEXT_PUBLIC_CARTO_API_KEY` in `.env.local`.
+The map also needs a free [CARTO Basemaps API key](https://carto.com/basemaps/apikey) for its light/dark vector basemap, otherwise CARTO shows an "API KEY REQUIRED" watermark. Paste it into `NEXT_PUBLIC_CARTO_API_KEY` in `.env.local`.
+
+The vector basemap is rendered by MapLibre, whose tile worker is served from `public/maplibre/`. Those files are copied from `node_modules` automatically before `npm run dev` and `npm run build`, so there is nothing to do by hand.
 
 **3. Add your playlists**
 
