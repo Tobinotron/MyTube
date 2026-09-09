@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { setWorkerUrl } from 'maplibre-gl';
+import type { PaintOverrides, PaintProperty } from './basemapOverrides';
 import '@maplibre/maplibre-gl-leaflet';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -42,11 +43,12 @@ interface VectorBasemapProps {
   styleUrl: string;
   attribution: string;
   apiKey?: string;
+  paintOverrides?: PaintOverrides;
 }
 
 // Renders a MapLibre vector basemap as a Leaflet layer in the tile pane, so markers,
 // clusters and polylines drawn by Leaflet stay on top of it.
-export default function VectorBasemap({ styleUrl, attribution, apiKey }: VectorBasemapProps) {
+export default function VectorBasemap({ styleUrl, attribution, apiKey, paintOverrides }: VectorBasemapProps) {
   const map = useMap();
 
   useEffect(() => {
@@ -57,10 +59,24 @@ export default function VectorBasemap({ styleUrl, attribution, apiKey }: VectorB
     });
     layer.addTo(map);
 
+    const glMap = layer.getMaplibreMap();
+    const applyOverrides = () => {
+      if (!paintOverrides) return;
+      for (const [layerId, paint] of Object.entries(paintOverrides)) {
+        if (!glMap.getLayer(layerId)) continue;
+        for (const [property, value] of Object.entries(paint) as [PaintProperty, string][]) {
+          glMap.setPaintProperty(layerId, property, value);
+        }
+      }
+    };
+    // style.load fires once the style JSON has been parsed and its layers exist.
+    glMap.on('style.load', applyOverrides);
+
     return () => {
+      glMap.off('style.load', applyOverrides);
       layer.remove();
     };
-  }, [map, styleUrl, attribution, apiKey]);
+  }, [map, styleUrl, attribution, apiKey, paintOverrides]);
 
   return null;
 }

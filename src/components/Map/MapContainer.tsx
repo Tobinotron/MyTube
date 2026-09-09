@@ -8,6 +8,7 @@ import { Video } from '@/types/video';
 import { useSettings } from '@/contexts/SettingsContext';
 import { Eye, EyeOff, Map, LayoutGrid, Mountain } from 'lucide-react';
 import VectorBasemap, { isWebGLAvailable } from './VectorBasemap';
+import { DARK_MATTER_OVERRIDES, PaintOverrides } from './basemapOverrides';
 
 // Import Leaflet and MarkerCluster CSS
 import 'leaflet/dist/leaflet.css';
@@ -200,7 +201,7 @@ const cartoRasterUrl = (style: 'light_all' | 'dark_all') => {
 };
 
 type BasemapConfig =
-  | { kind: 'vector'; styleUrl: string; rasterFallbackUrl: string; attribution: string; maxZoom: number }
+  | { kind: 'vector'; styleUrl: string; rasterFallbackUrl: string; attribution: string; maxZoom: number; paintOverrides?: PaintOverrides }
   | { kind: 'raster'; url: string; attribution: string; maxZoom: number };
 
 const BASEMAPS: Record<string, BasemapConfig> = {
@@ -214,6 +215,7 @@ const BASEMAPS: Record<string, BasemapConfig> = {
   'styled-dark': {
     kind: 'vector',
     styleUrl: 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    paintOverrides: DARK_MATTER_OVERRIDES,
     rasterFallbackUrl: cartoRasterUrl('dark_all'),
     attribution: CARTO_ATTRIBUTION,
     maxZoom: 20,
@@ -321,6 +323,7 @@ export default function MapContainer({ videos, onVideoClick }: MapContainerProps
             styleUrl={basemap.styleUrl}
             attribution={basemap.attribution}
             apiKey={CARTO_API_KEY}
+            paintOverrides={basemap.paintOverrides}
           />
         ) : (
           <TileLayer
