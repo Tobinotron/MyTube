@@ -41,6 +41,8 @@ Open `.env.local` and paste your YouTube API key. If you don't have one yet:
 - Enable the **YouTube Data API v3**
 - Create an API key under Credentials
 
+The map also needs a free [CARTO Basemaps API key](https://carto.com/basemaps/apikey), otherwise the light/dark map tiles show an "API KEY REQUIRED" watermark. Paste it into `NEXT_PUBLIC_CARTO_API_KEY` in `.env.local`.
+
 **3. Add your playlists**
 
 Edit `config/categories.json` to add your YouTube playlists. Grab the playlist ID from the URL (`youtube.com/playlist?list=PLxxxxxxx`) and set it up like this:

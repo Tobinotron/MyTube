@@ -177,15 +177,34 @@ function MapControlButton({
 
 type MapStyle = 'styled' | 'satellite';
 
+// CARTO basemaps require a (free) API key since August 2026. Without one, tiles are
+// still served but carry an "API KEY REQUIRED" watermark. Get a key at
+// https://carto.com/basemaps/apikey and set NEXT_PUBLIC_CARTO_API_KEY in .env.local.
+const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY;
+
+const cartoTileUrl = (style: 'light_all' | 'dark_all') => {
+  const base = `https://basemaps.cartocdn.com/rastertiles/${style}/{z}/{x}/{y}{r}.png`;
+  return CARTO_API_KEY ? `${base}?key=${encodeURIComponent(CARTO_API_KEY)}` : base;
+};
+
+if (!CARTO_API_KEY && typeof window !== 'undefined') {
+  console.warn(
+    'NEXT_PUBLIC_CARTO_API_KEY is not set. CARTO basemap tiles will show an "API KEY REQUIRED" watermark. ' +
+    'Get a free key at https://carto.com/basemaps/apikey'
+  );
+}
+
+const CARTO_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+
 const TILE_CONFIGS: Record<string, { url: string; attribution: string; maxZoom: number }> = {
   'styled-light': {
-    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    url: cartoTileUrl('light_all'),
+    attribution: CARTO_ATTRIBUTION,
     maxZoom: 20,
   },
   'styled-dark': {
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    url: cartoTileUrl('dark_all'),
+    attribution: CARTO_ATTRIBUTION,
     maxZoom: 20,
   },
   satellite: {
