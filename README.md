@@ -4,7 +4,9 @@ A self-hosted YouTube playlist viewer. Organize your playlists into categories, 
 
 Built with Next.js, React, TypeScript, and Tailwind CSS. Uses Leaflet for maps.
 
-<!-- TODO: Add a screenshot here -->
+![MyTube main page](assets/mainpage.jpg)
+
+![MyTube map view with geotagged videos and a travel route](assets/map.jpg)
 
 ## Features
 
